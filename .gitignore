@@ -1,0 +1,8 @@
+build/
+
+# Intellij excludes
+.idea/
+
+# Gradle excludes
+.gradle/
+gradle/wrapper
