@@ -15,7 +15,7 @@ public interface WarehouseRepository {
 
   List<Product> getProducts();
 
-  void addProducts(List<Product> products);
+  List<Product> addProducts(List<Product> products);
 
   List<Product>  reserveProducts(ReservationRequest reservationRequest) throws NoEnoughQuantityException, ProductsWereNotFoundException;
 

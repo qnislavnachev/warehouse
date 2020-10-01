@@ -43,7 +43,9 @@ class PersistentWarehouseRepository implements WarehouseRepository {
   }
 
   @Override
-  public void addProducts(List<Product> products) {
+  public List<Product> addProducts(List<Product> products) {
+    List<Product> savedProducts = new ArrayList<>();
+
     products.forEach(product -> {
       ProductEntity productEntity = database.findByName(product.getName());
 
@@ -54,7 +56,10 @@ class PersistentWarehouseRepository implements WarehouseRepository {
       }
 
       database.save(productEntity);
+      savedProducts.add(adapt(productEntity));
     });
+
+    return savedProducts;
   }
 
   @Override

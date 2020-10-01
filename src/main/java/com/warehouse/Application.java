@@ -36,6 +36,7 @@ public class Application extends WebSecurityConfigurerAdapter {
   private final ApplicationContext context;
   private final Set<String> unauthorizedEndpoints;
 
+  //TODO: this should be removed from here
   private final static String SECRET_KEY = "::iani-secret-key::";
 
   public Application(ApplicationContext context) {
@@ -55,6 +56,8 @@ public class Application extends WebSecurityConfigurerAdapter {
 
     http.csrf().disable()
             .authorizeRequests().antMatchers("/auth").permitAll()
+            .and()
+            .authorizeRequests().antMatchers("/bi/**").hasRole(Role.ADMIN_ROLE)
             .and()
             .authorizeRequests().antMatchers("/roles").hasRole(Role.ADMIN_ROLE)
             .and()

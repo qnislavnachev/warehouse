@@ -1,7 +1,5 @@
 package com.warehouse.adapter.dao.payment;
 
-import com.warehouse.adapter.dao.order.OrderFacade;
-import com.warehouse.adapter.dao.warehouse.WarehouseStorageFacade;
 import com.warehouse.core.Order;
 import com.warehouse.core.exceptions.NoEnoughAmountException;
 import com.warehouse.core.exceptions.SystemException;
@@ -16,13 +14,9 @@ import javax.transaction.Transactional;
 
 @Component
 public class PaymentsFacade {
-  private final WarehouseStorageFacade warehouseFacade;
-  private final OrderFacade orderFacade;
   private final PaymentStrategyFactory paymentStrategyFactory;
 
-  public PaymentsFacade(WarehouseStorageFacade warehouseFacade, OrderFacade orderFacade, PaymentStrategyFactory paymentStrategyFactory) {
-    this.warehouseFacade = warehouseFacade;
-    this.orderFacade = orderFacade;
+  public PaymentsFacade(PaymentStrategyFactory paymentStrategyFactory) {
     this.paymentStrategyFactory = paymentStrategyFactory;
   }
 
