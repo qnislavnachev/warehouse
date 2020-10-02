@@ -46,7 +46,7 @@ class PersistentOrderRepository implements OrderRepository {
   public Order markAsPaid(Order order) {
     database.pay(order.getId());
 
-    return new Order(order.getId(), order.getOrderItems(), order.getPrice(), true);
+    return new Order(order.getId(), order.getOwnerId(), order.getOrderItems(), order.getPrice(), true);
   }
 
   private Order adapt(OrderEntity entity) {
