@@ -78,6 +78,10 @@ public class OrderController {
         return Response.forbidden(Error.of("The user does not have access to the given resource"));
       }
 
+      if (order.isPaid()) {
+        return Response.conflict(Error.of("The order is already paid."));
+      }
+
       Order paidOrder = orderService.payOrder(order, paymentMethod);
       return Response.ok(OrderDto.adapt(paidOrder));
 
