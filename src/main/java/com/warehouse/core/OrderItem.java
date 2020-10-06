@@ -1,6 +1,6 @@
 package com.warehouse.core;
 
-public class OrderItem {
+public class OrderItem implements Duplicator<OrderItem> {
   private final Long productId;
   private final Double quantity;
 
@@ -15,5 +15,10 @@ public class OrderItem {
 
   public Double getQuantity() {
     return quantity;
+  }
+
+  @Override
+  public OrderItem duplicate() {
+    return new OrderItem(this.productId, this.quantity);
   }
 }

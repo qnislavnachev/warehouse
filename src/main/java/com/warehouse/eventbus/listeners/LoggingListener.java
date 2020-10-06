@@ -21,7 +21,6 @@ public class LoggingListener implements EventListener {
 
   public void handle(ProductsLoadedEvent event) {
     // TODO: Optimization for bulk logging should be added
-
     event.products.forEach(product -> {
               String description = String.format("Loading %s quantity of product with id %s", product.getQuantity(), product.getId());
 

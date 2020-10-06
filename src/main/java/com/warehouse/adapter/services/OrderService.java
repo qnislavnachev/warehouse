@@ -28,7 +28,7 @@ public class OrderService {
 
   public Order createOrder(Long ownerId, List<OrderItem> orderItems) throws NoEnoughQuantityException, ProductsWereNotFoundException {
     Order order = orderFacade.create(ownerId, orderItems);
-    eventBus.publish(new OrderCreatedEvent(order));
+    eventBus.publish(new OrderCreatedEvent(order.duplicate()));
 
     return order;
   }
@@ -40,7 +40,7 @@ public class OrderService {
   public Order payOrder(Order order, PaymentMethod paymentMethod) throws WalletNotFoundException, SystemException, NoEnoughAmountException, NotSupportedException {
     Order paidOrder = paymentsFacade.payOrder(order, paymentMethod);
 
-    eventBus.publish(new OrderPaidEvent(paidOrder));
+    eventBus.publish(new OrderPaidEvent(paidOrder.duplicate()));
 
     return paidOrder;
   }

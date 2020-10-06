@@ -30,7 +30,7 @@ public class WarehouseStorageFacade {
     warehouseRepository.addProducts(products);
   }
 
-  public void sellOrder(Order order) throws NoEnoughQuantityException, SellProcessException {
-    warehouseRepository.sellOrder(order);
+  public void sellOrderStock(Order order) throws NoEnoughQuantityException, SellProcessException {
+    warehouseRepository.sellOrderStock(order);
   }
 }

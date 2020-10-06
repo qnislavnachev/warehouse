@@ -15,11 +15,11 @@ abstract class AppPaymentStrategy implements PaymentStrategy {
   }
 
   @Override
-  public Order pay(Order order) throws WalletNotFoundException, NoEnoughAmountException, SystemException {
+  public Order pay(Order order) throws InvalidPaymentSourceException, NoEnoughAmountException, SystemException {
     Order paidOrder = orderFacade.markAsPaid(order);
 
     try {
-      warehouseFacade.sellOrder(paidOrder);
+      warehouseFacade.sellOrderStock(paidOrder);
 
     } catch (NoEnoughQuantityException | SellProcessException e) {
       // if some of these exception occurred it is because of some system problem
@@ -32,5 +32,5 @@ abstract class AppPaymentStrategy implements PaymentStrategy {
     return paidOrder;
   }
 
-  public abstract void collectMoney(Order order) throws WalletNotFoundException, NoEnoughAmountException;
+  public abstract void collectMoney(Order order) throws InvalidPaymentSourceException, NoEnoughAmountException;
 }

@@ -3,13 +3,14 @@ package com.warehouse.core;
 import com.warehouse.adapter.security.AuthenticatedUser;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Order implements Resource {
+public class Order implements Resource, Duplicator<Order> {
   private final Long id;
   private final Long ownerId;
   private final List<OrderItem> orderItems;
   private final Double price;
-  private boolean isPaid;
+  private final boolean isPaid;
 
   public Order(Long id, Long ownerId, List<OrderItem> orderItems, Double price, boolean isPaid) {
     this.id = id;
@@ -47,12 +48,15 @@ public class Order implements Resource {
     return isPaid;
   }
 
-  public void pay() {
-    isPaid = true;
-  }
-
   @Override
   public boolean isOwnedBy(AuthenticatedUser user) {
     return user.getId().equals(ownerId);
+  }
+
+  @Override
+  public Order duplicate() {
+    List<OrderItem> clonedItems = this.orderItems.stream().map(OrderItem::duplicate).collect(Collectors.toList());
+
+    return new Order(this.id, this.ownerId, clonedItems, this.price, this.isPaid);
   }
 }

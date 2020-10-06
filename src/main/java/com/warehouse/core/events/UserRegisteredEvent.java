@@ -1,11 +1,13 @@
 package com.warehouse.core.events;
 
-import com.warehouse.core.User;
-
 public class UserRegisteredEvent implements Event {
-  public final User user;
+  public final Long userId;
+  public final String name;
+  public final String email;
 
-  public UserRegisteredEvent(User user) {
-    this.user = user;
+  public UserRegisteredEvent(Long userId, String name, String email) {
+    this.userId = userId;
+    this.name = name;
+    this.email = email;
   }
 }

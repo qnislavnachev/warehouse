@@ -4,6 +4,7 @@ import com.warehouse.adapter.dao.order.OrderFacade;
 import com.warehouse.adapter.dao.user.UserFacade;
 import com.warehouse.adapter.dao.warehouse.WarehouseStorageFacade;
 import com.warehouse.core.Order;
+import com.warehouse.core.exceptions.InvalidPaymentSourceException;
 import com.warehouse.core.exceptions.NoEnoughAmountException;
 import com.warehouse.core.exceptions.WalletNotFoundException;
 
@@ -16,7 +17,12 @@ class WalletPaymentStrategy extends AppPaymentStrategy {
   }
 
   @Override
-  public void collectMoney(Order order) throws WalletNotFoundException, NoEnoughAmountException {
-    userFacade.walletWithdraw(order.getOwnerId(), order.getPrice());
+  public void collectMoney(Order order) throws InvalidPaymentSourceException, NoEnoughAmountException {
+    try {
+      userFacade.walletWithdraw(order.getOwnerId(), order.getPrice());
+
+    } catch (WalletNotFoundException e) {
+      throw new InvalidPaymentSourceException();
+    }
   }
 }

@@ -25,7 +25,7 @@ public class UserService {
   public User registerUser(User user, Set<Long> rolesIds) throws UserAlreadyExistsException, RoleNotFoundException {
     User registeredUser = userFacade.registerUser(user, rolesIds);
 
-    eventBus.publish(new UserRegisteredEvent(registeredUser));
+    eventBus.publish(new UserRegisteredEvent(user.getId(), user.getName(), user.getEmail()));
 
     return registeredUser;
   }

@@ -1,5 +1,6 @@
 package com.warehouse.adapter.dao.warehouse;
 
+import com.warehouse.core.Reservation;
 import com.warehouse.core.Order;
 import com.warehouse.core.OrderItem;
 import com.warehouse.core.Product;
@@ -63,11 +64,11 @@ class PersistentWarehouseRepository implements WarehouseRepository {
   }
 
   @Override
-  public List<Product> reserveProducts(ReservationRequest reservationRequest) throws NoEnoughQuantityException, ProductsWereNotFoundException {
+  public Reservation reserveProducts(ReservationRequest reservationRequest) throws NoEnoughQuantityException, ProductsWereNotFoundException {
     Set<Long> productsIds = reservationRequest.getProductsIds();
 
     if (productsIds.isEmpty()) {
-      return Collections.emptyList();
+      return new Reservation();
     }
 
     List<ProductEntity> productEntities = database.findAllById(reservationRequest.getProductsIds());
@@ -91,11 +92,11 @@ class PersistentWarehouseRepository implements WarehouseRepository {
 
     database.saveAll(productEntities);
 
-    return reservedProducts;
+    return new Reservation(reservedProducts);
   }
 
   @Override
-  public void sellOrder(Order order) throws NoEnoughQuantityException, SellProcessException {
+  public void sellOrderStock(Order order) throws NoEnoughQuantityException, SellProcessException {
     if (order.getOrderItems().isEmpty()) {
       return;
     }

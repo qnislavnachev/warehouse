@@ -22,7 +22,7 @@ public class ReservationRequest {
     return productQuantities.getOrDefault(productId, 0.0);
   }
 
-  public static ReservationRequest from(List<OrderItem> orderItems) {
+  public static ReservationRequest of(List<OrderItem> orderItems) {
     Map<Long, Double> productQuantities = new HashMap<>();
 
     for (OrderItem item : orderItems) {

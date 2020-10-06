@@ -1,5 +1,6 @@
 package com.warehouse.adapter.dao.warehouse;
 
+import com.warehouse.core.Reservation;
 import com.warehouse.core.Order;
 import com.warehouse.core.Product;
 import com.warehouse.core.exceptions.ProductsWereNotFoundException;
@@ -17,7 +18,7 @@ public interface WarehouseRepository {
 
   List<Product> addProducts(List<Product> products);
 
-  List<Product>  reserveProducts(ReservationRequest reservationRequest) throws NoEnoughQuantityException, ProductsWereNotFoundException;
+  Reservation reserveProducts(ReservationRequest reservationRequest) throws NoEnoughQuantityException, ProductsWereNotFoundException;
 
-  void sellOrder(Order order) throws NoEnoughQuantityException, SellProcessException;
+  void sellOrderStock(Order order) throws NoEnoughQuantityException, SellProcessException;
 }

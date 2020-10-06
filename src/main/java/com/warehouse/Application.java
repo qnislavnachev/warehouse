@@ -10,6 +10,7 @@ import com.warehouse.adapter.services.security.UserAuthenticationService;
 import com.warehouse.core.Role;
 import com.warehouse.eventbus.AppEventManager;
 import com.warehouse.eventbus.EventBus;
+import com.warehouse.eventbus.listeners.EmailNotifier;
 import com.warehouse.eventbus.listeners.LoggingListener;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.ApplicationContext;
@@ -89,10 +90,12 @@ public class Application extends WebSecurityConfigurerAdapter {
 
   @Bean
   public EventBus getEventBus() {
-    AppEventManager eventManager = new AppEventManager();
     LoggingListener loggingListener = context.getBean(LoggingListener.class);
+    EmailNotifier emailNotifier = context.getBean(EmailNotifier.class);
 
+    AppEventManager eventManager = new AppEventManager();
     eventManager.register(loggingListener);
+    eventManager.register(emailNotifier);
 
     return new EventBus(eventManager);
   }
