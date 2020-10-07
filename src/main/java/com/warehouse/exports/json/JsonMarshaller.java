@@ -1,11 +1,12 @@
-package com.warehouse.exports;
+package com.warehouse.exports.json;
 
 import com.google.gson.Gson;
 import com.warehouse.core.Order;
 import com.warehouse.core.Product;
 import com.warehouse.core.User;
+import com.warehouse.exports.Marshaller;
 
-public class JsonMarshaller implements Marshaller {
+class JsonMarshaller implements Marshaller {
   private final Gson gson;
 
   public JsonMarshaller() {
