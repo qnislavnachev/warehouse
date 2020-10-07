@@ -1,6 +1,9 @@
 package com.warehouse.core;
 
-public class Product {
+import com.warehouse.exports.Exportable;
+import com.warehouse.exports.Marshaller;
+
+public class Product implements Exportable {
 
   private final Long id;
   private final String name;
@@ -39,5 +42,10 @@ public class Product {
 
   public Double getQuantity() {
     return quantity;
+  }
+
+  @Override
+  public String accept(Marshaller marshaller) {
+    return marshaller.marshall(this);
   }
 }

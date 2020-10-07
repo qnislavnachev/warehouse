@@ -1,9 +1,12 @@
 package com.warehouse.core;
 
+import com.warehouse.exports.Exportable;
+import com.warehouse.exports.Marshaller;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Exportable {
   private final Long id;
   private final String name;
   private final String email;
@@ -51,5 +54,10 @@ public class User {
 
   public List<Role> getRoles() {
     return roles;
+  }
+
+  @Override
+  public String accept(Marshaller marshaller) {
+    return marshaller.marshall(this);
   }
 }

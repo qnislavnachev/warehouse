@@ -1,11 +1,13 @@
 package com.warehouse.core;
 
 import com.warehouse.adapter.security.AuthenticatedUser;
+import com.warehouse.exports.Exportable;
+import com.warehouse.exports.Marshaller;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Order implements Resource, Duplicator<Order> {
+public class Order implements Resource, Exportable, Duplicator<Order> {
   private final Long id;
   private final Long ownerId;
   private final List<OrderItem> orderItems;
@@ -51,6 +53,11 @@ public class Order implements Resource, Duplicator<Order> {
   @Override
   public boolean isOwnedBy(AuthenticatedUser user) {
     return user.getId().equals(ownerId);
+  }
+
+  @Override
+  public String accept(Marshaller marshaller) {
+    return marshaller.marshall(this);
   }
 
   @Override

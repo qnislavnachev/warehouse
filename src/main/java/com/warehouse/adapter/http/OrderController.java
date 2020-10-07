@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v1")
 public class OrderController {
 
   private final OrderService orderService;
@@ -79,7 +78,7 @@ public class OrderController {
       }
 
       if (order.isPaid()) {
-        return Response.conflict(Error.of("The order is already paid."));
+        return Response.conflict(Error.of("The order with id %s is already paid", order.getId()));
       }
 
       Order paidOrder = orderService.payOrder(order, paymentMethod);
@@ -88,8 +87,8 @@ public class OrderController {
     } catch (NotSupportedException | IllegalArgumentException e) {
       return Response.badRequest(Error.of("Payment type is not supported yet"));
 
-    } catch (WalletNotFoundException e) {
-      return Response.notFound(Error.of("Wallet with owner id %s was not found", e.ownerId));
+    } catch (InvalidPaymentSourceException e) {
+      return Response.notFound(Error.of("Unable to process payment due to error with the payment source"));
 
     } catch (OrderNotFoundException e) {
       return Response.notFound(Error.of("Order with id %s was not found", e.orderId));

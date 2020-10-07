@@ -1,6 +1,5 @@
 package com.warehouse.adapter.http.filters;
 
-import com.google.gson.Gson;
 import com.warehouse.adapter.http.dto.Error;
 import com.warehouse.adapter.http.dto.Response;
 import com.warehouse.adapter.security.Authorization;

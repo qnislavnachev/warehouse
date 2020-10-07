@@ -1,5 +1,7 @@
 package com.warehouse.adapter.http.dto;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class Response {
@@ -10,6 +12,13 @@ public class Response {
 
   public static ResponseEntity<Object> ok() {
     return ResponseEntity.status(200).build();
+  }
+
+  public static ResponseEntity<Object> ok(Long contentLength, InputStreamResource resource) {
+    return ResponseEntity.status(200)
+            .contentLength(contentLength)
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
   }
 
   public static ResponseEntity<Object> created() {

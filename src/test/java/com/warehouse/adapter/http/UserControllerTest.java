@@ -64,7 +64,7 @@ public class UserControllerTest {
     RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.singletonList(randomRole.getId()));
     String jsonContent = gson.toJson(registerUserRequest);
 
-    mockMvc.perform(post("/v1/users")
+    mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -86,7 +86,7 @@ public class UserControllerTest {
     RegisterUserRequest registerUserRequest = new RegisterUserRequest("::iani::", "dummy@gmail.com", "::password::", Collections.emptyList());
     String jsonContent = gson.toJson(registerUserRequest);
 
-    mockMvc.perform(post("/v1/users")
+    mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, userBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -104,7 +104,7 @@ public class UserControllerTest {
     RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.emptyList());
     String jsonContent = gson.toJson(registerUserRequest);
 
-    mockMvc.perform(post("/v1/users")
+    mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -121,7 +121,7 @@ public class UserControllerTest {
     RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.singletonList(0L));
     String jsonContent = gson.toJson(registerUserRequest);
 
-    mockMvc.perform(post("/v1/users")
+    mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -135,7 +135,7 @@ public class UserControllerTest {
     User user = register(new User("::name::", "dummy@gmail.com", "::password::"), role);
     String userBearerToken = authenticate(user);
 
-    mockMvc.perform(get("/v1/users/{id}", user.getId())
+    mockMvc.perform(get("/users/{id}", user.getId())
             .header(HttpHeaders.AUTHORIZATION, userBearerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(user.getId()))
@@ -155,7 +155,7 @@ public class UserControllerTest {
     Role randomRole = roleRepository.add(new Role("::random-role::"));
     User user = register(new User("::name::", "dummy@gmail.com", "::password::"), randomRole);
 
-    mockMvc.perform(get("/v1/users/{id}", user.getId())
+    mockMvc.perform(get("/users/{id}", user.getId())
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(user.getId()))
@@ -173,7 +173,7 @@ public class UserControllerTest {
 
     String fistUserBearerToken = authenticate(firstUser);
 
-    mockMvc.perform(get("/v1/users/{id}", secondUser.getId())
+    mockMvc.perform(get("/users/{id}", secondUser.getId())
             .header(HttpHeaders.AUTHORIZATION, fistUserBearerToken))
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.description").value("The user does not have access to the given resource"));
@@ -185,7 +185,7 @@ public class UserControllerTest {
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(get("/v1/users/{id}", 0L)
+    mockMvc.perform(get("/users/{id}", 0L)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.description").value("User with id 0 was not found"));
@@ -199,7 +199,7 @@ public class UserControllerTest {
     DepositRequest depositRequest = new DepositRequest(50.0);
     String depositRequestContent = gson.toJson(depositRequest);
 
-    mockMvc.perform(put("/v1/users/{id}/wallet/deposit", user.getId())
+    mockMvc.perform(put("/users/{id}/wallet/deposit", user.getId())
             .header(HttpHeaders.AUTHORIZATION, userBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(depositRequestContent))
@@ -222,7 +222,7 @@ public class UserControllerTest {
     DepositRequest depositRequest = new DepositRequest(34.0);
     String depositRequestContent = gson.toJson(depositRequest);
 
-    mockMvc.perform(put("/v1/users/{id}/wallet/deposit", user.getId())
+    mockMvc.perform(put("/users/{id}/wallet/deposit", user.getId())
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(depositRequestContent))
@@ -242,7 +242,7 @@ public class UserControllerTest {
     DepositRequest depositRequest = new DepositRequest(34.0);
     String depositRequestContent = gson.toJson(depositRequest);
 
-    mockMvc.perform(put("/v1/users/{id}/wallet/deposit", 0L)
+    mockMvc.perform(put("/users/{id}/wallet/deposit", 0L)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(depositRequestContent))
@@ -260,7 +260,7 @@ public class UserControllerTest {
     DepositRequest depositRequest = new DepositRequest(50.0);
     String depositRequestContent = gson.toJson(depositRequest);
 
-    mockMvc.perform(put("/v1/users/{id}/wallet/deposit", secondUser.getId())
+    mockMvc.perform(put("/users/{id}/wallet/deposit", secondUser.getId())
             .header(HttpHeaders.AUTHORIZATION, fistUserBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(depositRequestContent))

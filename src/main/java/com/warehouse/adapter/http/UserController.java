@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashSet;
 
 @RestController
-@RequestMapping("/v1")
 public class UserController {
   private final UserService userService;
 

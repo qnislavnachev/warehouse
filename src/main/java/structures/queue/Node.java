@@ -2,7 +2,6 @@ package structures.queue;
 
 import java.io.PrintStream;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 class Node<T> {

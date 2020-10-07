@@ -8,7 +8,6 @@ public class ArrayQueue<T> implements Queue<T> {
   private T[] items = (T[]) new Object[capacity];
 
 
-
   @Override
   public void queue(T item) {
     rear = (rear + 1) % capacity;

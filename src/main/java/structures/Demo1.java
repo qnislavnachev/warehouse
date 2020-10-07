@@ -1,10 +1,7 @@
 package structures;
 
-import structures.queue.ArrayQueue;
 import structures.queue.GenericQueue;
 import structures.queue.Queue;
-import structures.stack.GenericStack;
-import structures.stack.Stack;
 
 public class Demo1 {
 

@@ -85,7 +85,7 @@ public class OrderControllerTest {
 
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(post("/v1/accounting/orders")
+    mockMvc.perform(post("/accounting/orders")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -98,12 +98,12 @@ public class OrderControllerTest {
     Product product = addProduct(new Product("Apples", 0.30, 5000.0));
 
     List<OrderItemDto> items = Collections.singletonList(new OrderItemDto(product.getId(), 3500.0));
-    CreateOrderRequest orderRequest = new CreateOrderRequest(user.getId() + 200 , items);
+    CreateOrderRequest orderRequest = new CreateOrderRequest(user.getId() + 200, items);
     String jsonContent = gson.toJson(orderRequest);
 
     String userBearerToken = authenticate(user);
 
-    mockMvc.perform(post("/v1/accounting/orders")
+    mockMvc.perform(post("/accounting/orders")
             .header(HttpHeaders.AUTHORIZATION, userBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -119,7 +119,7 @@ public class OrderControllerTest {
 
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(post("/v1/accounting/orders")
+    mockMvc.perform(post("/accounting/orders")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -137,7 +137,7 @@ public class OrderControllerTest {
 
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(post("/v1/accounting/orders")
+    mockMvc.perform(post("/accounting/orders")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
@@ -155,7 +155,7 @@ public class OrderControllerTest {
 
     String userBearerToken = authenticate(user);
 
-    mockMvc.perform(get("/v1/accounting/orders/{id}", order.getId())
+    mockMvc.perform(get("/accounting/orders/{id}", order.getId())
             .header(HttpHeaders.AUTHORIZATION, userBearerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(order.getId()))
@@ -177,7 +177,7 @@ public class OrderControllerTest {
 
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(get("/v1/accounting/orders/{id}", order.getId())
+    mockMvc.perform(get("/accounting/orders/{id}", order.getId())
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(order.getId()))
@@ -193,7 +193,7 @@ public class OrderControllerTest {
   void tryToGetUnexistingOrder() throws Exception {
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(get("/v1/accounting/orders/{id}", 0L)
+    mockMvc.perform(get("/accounting/orders/{id}", 0L)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.description").value("Order with id 0 was not found"));
@@ -210,7 +210,7 @@ public class OrderControllerTest {
 
     String secondUserBearerToken = authenticate(secondUser);
 
-    mockMvc.perform(get("/v1/accounting/orders/{id}", order.getId())
+    mockMvc.perform(get("/accounting/orders/{id}", order.getId())
             .header(HttpHeaders.AUTHORIZATION, secondUserBearerToken))
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.description").value("The user does not have access to the given resource"));
@@ -225,7 +225,7 @@ public class OrderControllerTest {
     String adminBearerToken = authenticate(admin);
     String jsonContent = gson.toJson(new PaymentType(PaymentMethod.WALLET.toString()));
 
-    mockMvc.perform(put("/v1/accounting/orders/{id}/pay", order.getId())
+    mockMvc.perform(put("/accounting/orders/{id}/pay", order.getId())
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
@@ -240,11 +240,10 @@ public class OrderControllerTest {
   }
 
 
-
   private Product addProduct(Product product) {
-    warehouseRepository.addProducts(Collections.singletonList(product));
+    List<Product> products = warehouseRepository.addProducts(Collections.singletonList(product));
 
-    return warehouseRepository.getProducts().get(0);
+    return products.get(0);
   }
 
   private User register(User user, Role... roles) throws UserAlreadyExistsException {

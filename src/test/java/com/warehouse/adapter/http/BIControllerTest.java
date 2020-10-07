@@ -1,17 +1,15 @@
 package com.warehouse.adapter.http;
 
-import com.google.gson.Gson;
 import com.warehouse.adapter.dao.order.OrderFacade;
 import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.adapter.dao.user.UserRepository;
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
-import com.warehouse.adapter.http.dto.CreateOrderRequest;
-import com.warehouse.adapter.http.dto.OrderItemDto;
 import com.warehouse.adapter.security.AuthenticatedUser;
 import com.warehouse.adapter.security.WebTokenGenerator;
-import com.warehouse.core.*;
-import com.warehouse.core.exceptions.NoEnoughQuantityException;
-import com.warehouse.core.exceptions.ProductsWereNotFoundException;
+import com.warehouse.core.OrderItem;
+import com.warehouse.core.Product;
+import com.warehouse.core.Role;
+import com.warehouse.core.User;
 import com.warehouse.core.exceptions.UserAlreadyExistsException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,17 +22,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

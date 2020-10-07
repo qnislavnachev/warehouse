@@ -62,7 +62,7 @@ public class Application extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests().antMatchers("/roles").hasRole(Role.ADMIN_ROLE)
             .and()
-            .authorizeRequests().antMatchers(HttpMethod.POST, "/v1/users", "/warehouse/products").hasRole(Role.ADMIN_ROLE)
+            .authorizeRequests().antMatchers(HttpMethod.POST, "/users", "/warehouse/products").hasRole(Role.ADMIN_ROLE)
             .anyRequest().permitAll()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

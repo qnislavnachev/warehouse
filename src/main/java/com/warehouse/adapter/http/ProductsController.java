@@ -6,10 +6,8 @@ import com.warehouse.adapter.http.dto.ProductDto;
 import com.warehouse.adapter.http.dto.Response;
 import com.warehouse.adapter.services.ProductsService;
 import com.warehouse.core.Product;
-import com.warehouse.core.Role;
 import com.warehouse.core.exceptions.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -37,7 +37,7 @@ public class OrderService {
     return orderFacade.getOrder(id);
   }
 
-  public Order payOrder(Order order, PaymentMethod paymentMethod) throws WalletNotFoundException, SystemException, NoEnoughAmountException, NotSupportedException {
+  public Order payOrder(Order order, PaymentMethod paymentMethod) throws SystemException, NoEnoughAmountException, NotSupportedException, InvalidPaymentSourceException {
     Order paidOrder = paymentsFacade.payOrder(order, paymentMethod);
 
     eventBus.publish(new OrderPaidEvent(paidOrder.duplicate()));
