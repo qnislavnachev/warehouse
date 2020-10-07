@@ -7,13 +7,13 @@ import java.util.UUID;
 
 public abstract class AbstractExporter implements Exporter {
 
-  public File toFile(String value, String extension) throws IOException {
+  public File buildFile(String content, String extension) throws IOException {
     String fileName = UUID.randomUUID().toString() + extension;
 
     File file = new File(fileName);
     FileWriter fileWriter = new FileWriter(file);
 
-    fileWriter.write(value);
+    fileWriter.write(content);
 
     return file;
   }

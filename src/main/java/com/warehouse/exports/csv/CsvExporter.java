@@ -26,6 +26,6 @@ public class CsvExporter extends AbstractExporter {
       builder.append(row).append("\n");
     }
 
-    return toFile(builder.toString(), extension);
+    return buildFile(builder.toString(), extension);
   }
 }

@@ -28,6 +28,6 @@ public class JsonExporter extends AbstractExporter {
 
     builder.append("]");
 
-    return toFile(builder.toString(), extension);
+    return buildFile(builder.toString(), extension);
   }
 }
