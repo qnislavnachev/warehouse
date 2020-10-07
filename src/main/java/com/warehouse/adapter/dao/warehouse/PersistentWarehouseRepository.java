@@ -7,7 +7,7 @@ import com.warehouse.core.Reservation;
 import com.warehouse.core.exceptions.NoEnoughQuantityException;
 import com.warehouse.core.exceptions.ProductNotFoundException;
 import com.warehouse.core.exceptions.ProductsWereNotFoundException;
-import com.warehouse.core.exceptions.SellProcessException;
+import com.warehouse.core.exceptions.UnableToSellStockException;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -96,7 +96,7 @@ class PersistentWarehouseRepository implements WarehouseRepository {
   }
 
   @Override
-  public void sellOrderStock(Order order) throws NoEnoughQuantityException, SellProcessException {
+  public void sellOrderStock(Order order) throws NoEnoughQuantityException, UnableToSellStockException {
     if (order.getOrderItems().isEmpty()) {
       return;
     }
@@ -108,7 +108,7 @@ class PersistentWarehouseRepository implements WarehouseRepository {
     List<ProductEntity> productEntities = database.findAllById(productsIds);
 
     if (productsIds.size() != productEntities.size()) {
-      throw new SellProcessException();
+      throw new UnableToSellStockException();
     }
 
     for (ProductEntity entity : productEntities) {

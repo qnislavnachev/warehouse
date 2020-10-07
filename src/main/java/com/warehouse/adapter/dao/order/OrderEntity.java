@@ -34,14 +34,6 @@ class OrderEntity {
     this.isPaid = false;
   }
 
-  public OrderEntity(Long id, Long ownerId, Double price, boolean isPaid) {
-    this.id = null;
-    this.ownerId = ownerId;
-    this.price = price;
-    this.orderItems = new ArrayList<>();
-    this.isPaid = isPaid;
-  }
-
   public Long getId() {
     return id;
   }

@@ -2,9 +2,10 @@ package com.warehouse.adapter.security.jwt;
 
 import com.warehouse.adapter.security.AuthenticatedUser;
 import com.warehouse.adapter.security.WebTokenGenerator;
+import com.warehouse.core.date.DateTime;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -26,17 +27,17 @@ public class JwtGenerator implements WebTokenGenerator {
 
   @Override
   public String generate(AuthenticatedUser user) {
-    Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) user.getAuthorities();
+    Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
 
     Map<String, Object> claims = new HashMap<>();
     claims.put("userId", user.getId());
-    claims.put("authorities", authorities.stream().map(SimpleGrantedAuthority::getAuthority).collect(Collectors.toList()));
+    claims.put("authorities", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
     return generate(user.getUsername(), claims);
   }
 
   private String generate(String subject, Map<String, Object> claims) {
-    Instant issueDate = Instant.now();
+    Instant issueDate = DateTime.now();
 
     return Jwts.builder()
             .setSubject(subject)

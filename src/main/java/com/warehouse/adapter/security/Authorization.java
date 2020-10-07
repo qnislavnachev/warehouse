@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Authorization extends UsernamePasswordAuthenticationToken {
 
-  public Authorization(Long userId, String email, List<GrantedAuthority> authorities) {
+  public Authorization(Long userId, String email, List<Authority> authorities) {
     super(new AuthenticatedUser(userId, email, "", authorities), null, authorities);
   }
 }

@@ -21,10 +21,10 @@ abstract class AppPaymentStrategy implements PaymentStrategy {
     try {
       warehouseFacade.sellOrderStock(paidOrder);
 
-    } catch (NoEnoughQuantityException | SellProcessException e) {
+    } catch (NoEnoughQuantityException | UnableToSellStockException e) {
       // if some of these exception occurred it is because of some system problem
       // if the business logic is fine these exceptions should not appear
-      throw new SystemException();
+      throw new SystemException(e);
     }
 
     collectMoney(paidOrder);

@@ -6,7 +6,7 @@ import com.warehouse.core.Reservation;
 import com.warehouse.core.exceptions.NoEnoughQuantityException;
 import com.warehouse.core.exceptions.ProductNotFoundException;
 import com.warehouse.core.exceptions.ProductsWereNotFoundException;
-import com.warehouse.core.exceptions.SellProcessException;
+import com.warehouse.core.exceptions.UnableToSellStockException;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public interface WarehouseRepository {
 
   Reservation reserveProducts(ReservationRequest reservationRequest) throws NoEnoughQuantityException, ProductsWereNotFoundException;
 
-  void sellOrderStock(Order order) throws NoEnoughQuantityException, SellProcessException;
+  void sellOrderStock(Order order) throws NoEnoughQuantityException, UnableToSellStockException;
 }

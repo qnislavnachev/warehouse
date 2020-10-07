@@ -1,5 +1,6 @@
 package com.warehouse.adapter.security.jwt;
 
+import com.warehouse.adapter.security.Authority;
 import com.warehouse.adapter.security.WebToken;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,7 +37,7 @@ public class Jwt implements WebToken {
   }
 
   @Override
-  public List<GrantedAuthority> getAuthorities() {
+  public List<Authority> getAuthorities() {
     List<String> authoritiesClaims = claims.get("authorities", List.class);
 
     if (isNull(authoritiesClaims) || authoritiesClaims.isEmpty()) {
@@ -44,7 +45,7 @@ public class Jwt implements WebToken {
     }
 
     return authoritiesClaims.stream()
-            .map(SimpleGrantedAuthority::new)
+            .map(Authority::new)
             .collect(Collectors.toList());
   }
 }

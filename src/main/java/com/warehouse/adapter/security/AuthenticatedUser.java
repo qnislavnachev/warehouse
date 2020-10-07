@@ -12,9 +12,9 @@ public class AuthenticatedUser implements UserDetails {
   private final Long id;
   private final String email;
   private final String password;
-  private final List<GrantedAuthority> authorities;
+  private final List<Authority> authorities;
 
-  public AuthenticatedUser(Long id, String email, String password, List<GrantedAuthority> authorities) {
+  public AuthenticatedUser(Long id, String email, String password, List<Authority> authorities) {
     this.id = id;
     this.email = email;
     this.password = password;
@@ -62,7 +62,7 @@ public class AuthenticatedUser implements UserDetails {
 
   public boolean isAdmin() {
     return authorities.stream()
-            .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + Role.ADMIN_ROLE));
+            .anyMatch(authority -> authority.is(Role.ADMIN_ROLE));
   }
 
   public static AuthenticatedUser getCurrentUser() {

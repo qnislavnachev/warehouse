@@ -12,5 +12,5 @@ public interface WebToken {
 
   boolean isExpired();
 
-  List<GrantedAuthority> getAuthorities();
+  List<Authority> getAuthorities();
 }

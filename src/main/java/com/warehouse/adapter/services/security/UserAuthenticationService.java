@@ -2,6 +2,7 @@ package com.warehouse.adapter.services.security;
 
 import com.warehouse.adapter.dao.user.UserFacade;
 import com.warehouse.adapter.security.AuthenticatedUser;
+import com.warehouse.adapter.security.Authority;
 import com.warehouse.core.User;
 import com.warehouse.core.exceptions.UserNotFoundException;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
@@ -18,21 +19,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserAuthenticationService implements UserDetailsService {
   private final UserFacade userFacade;
-  private final GrantedAuthorityDefaults grantedAuthorityDefaults;
 
-  public UserAuthenticationService(UserFacade userFacade, GrantedAuthorityDefaults grantedAuthorityDefaults) {
+  public UserAuthenticationService(UserFacade userFacade) {
     this.userFacade = userFacade;
-    this.grantedAuthorityDefaults = grantedAuthorityDefaults;
   }
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     try {
       User user = userFacade.getUser(email);
-      String rolePrefix = grantedAuthorityDefaults.getRolePrefix();
 
-      List<GrantedAuthority> authorities = user.getRoles().stream()
-              .map(it -> new SimpleGrantedAuthority(rolePrefix + it.getName()))
+      List<Authority> authorities = user.getRoles().stream()
+              .map(Authority::new)
               .collect(Collectors.toList());
 
       return new AuthenticatedUser(user.getId(), user.getEmail(), user.getPassword(), authorities);

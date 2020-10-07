@@ -73,7 +73,7 @@ public class Application extends WebSecurityConfigurerAdapter {
   @Override
   public UserDetailsService userDetailsServiceBean() throws Exception {
     UserFacade userFacade = context.getBean(UserFacade.class);
-    return new UserAuthenticationService(userFacade, grantedAuthorityDefaults());
+    return new UserAuthenticationService(userFacade);
   }
 
   @Bean
@@ -113,10 +113,5 @@ public class Application extends WebSecurityConfigurerAdapter {
   @Bean
   public SecurityFilter securityFilter() {
     return new SecurityFilter(unauthorizedEndpoints, tokenParser());
-  }
-
-  @Bean
-  public GrantedAuthorityDefaults grantedAuthorityDefaults() {
-    return new GrantedAuthorityDefaults("ROLE_");
   }
 }

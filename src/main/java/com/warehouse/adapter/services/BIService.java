@@ -49,7 +49,7 @@ public class BIService {
       return exporter.export(products);
 
     } catch (IOException e) {
-      throw new SystemException();
+      throw new SystemException(e);
     }
   }
 }

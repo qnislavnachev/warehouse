@@ -4,7 +4,7 @@ import com.warehouse.core.Order;
 import com.warehouse.core.Product;
 import com.warehouse.core.exceptions.NoEnoughQuantityException;
 import com.warehouse.core.exceptions.ProductNotFoundException;
-import com.warehouse.core.exceptions.SellProcessException;
+import com.warehouse.core.exceptions.UnableToSellStockException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class WarehouseStorageFacade {
     warehouseRepository.addProducts(products);
   }
 
-  public void sellOrderStock(Order order) throws NoEnoughQuantityException, SellProcessException {
+  public void sellOrderStock(Order order) throws NoEnoughQuantityException, UnableToSellStockException {
     warehouseRepository.sellOrderStock(order);
   }
 }
