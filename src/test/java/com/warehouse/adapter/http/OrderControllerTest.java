@@ -95,17 +95,18 @@ public class OrderControllerTest {
 
   @Test
   void userTriesToCreateOrderForAnotherUser() throws Exception {
-    User user = register(new User("::name::", "dummy@gmail.com", "::password::"));
+    User firstUser = register(new User("::firstUser::", "firstUser@gmail.com", "::password::"));
+    User secondUser = register(new User("::secondUser::", "secondUser@gmail.com", "::password::"));
     Product product = addProduct(new Product("Apples", 0.30, 5000.0));
 
     List<OrderItemDto> items = Collections.singletonList(new OrderItemDto(product.getId(), 3500.0));
-    CreateOrderRequest orderRequest = new CreateOrderRequest(user.getId() + 200, items);
-    String jsonContent = gson.toJson(orderRequest);
+    CreateOrderRequest secondUserOrderRequest = new CreateOrderRequest(secondUser.getId() + 200, items);
+    String jsonContent = gson.toJson(secondUserOrderRequest);
 
-    String userBearerToken = authenticate(user);
+    String firstUserBearerToken = authenticate(firstUser);
 
     mockMvc.perform(post("/accounting/orders")
-            .header(HttpHeaders.AUTHORIZATION, userBearerToken)
+            .header(HttpHeaders.AUTHORIZATION, firstUserBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonContent))
             .andExpect(status().isForbidden())
@@ -114,7 +115,9 @@ public class OrderControllerTest {
 
   @Test
   void orderedProductsWereNotFound() throws Exception {
-    List<OrderItemDto> items = Collections.singletonList(new OrderItemDto(0L, 20.0));
+    Long unexistingProductId = 0L;
+
+    List<OrderItemDto> items = Collections.singletonList(new OrderItemDto(unexistingProductId, 20.0));
     CreateOrderRequest orderRequest = new CreateOrderRequest(admin.getId(), items);
     String jsonContent = gson.toJson(orderRequest);
 
@@ -132,7 +135,7 @@ public class OrderControllerTest {
   void createOrderWithInsufficientQuantityOfGivenProduct() throws Exception {
     Product product = addProduct(new Product("Apples", 0.30, 50.0));
 
-    List<OrderItemDto> items = Collections.singletonList(new OrderItemDto(product.getId(), 51.0));
+    List<OrderItemDto> items = Collections.singletonList(new OrderItemDto(product.getId(), product.getQuantity() + 1));
     CreateOrderRequest orderRequest = new CreateOrderRequest(admin.getId(), items);
     String jsonContent = gson.toJson(orderRequest);
 
@@ -192,9 +195,10 @@ public class OrderControllerTest {
 
   @Test
   void tryToGetUnexistingOrder() throws Exception {
+    Long unexistingOrderId = 0L;
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(get("/accounting/orders/{id}", 0L)
+    mockMvc.perform(get("/accounting/orders/{id}", unexistingOrderId)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.description").value("Order with id 0 was not found"));
@@ -207,11 +211,11 @@ public class OrderControllerTest {
 
     Product product = addProduct(new Product("Apples", 0.30, 50.0));
     List<OrderItem> orderItems = Collections.singletonList(new OrderItem(product.getId(), 20.0));
-    Order order = orderRepository.create(new Order(firstUser.getId(), orderItems, 50.0, false));
+    Order firstUserOrder = orderRepository.create(new Order(firstUser.getId(), orderItems, 50.0, false));
 
     String secondUserBearerToken = authenticate(secondUser);
 
-    mockMvc.perform(get("/accounting/orders/{id}", order.getId())
+    mockMvc.perform(get("/accounting/orders/{id}", firstUserOrder.getId())
             .header(HttpHeaders.AUTHORIZATION, secondUserBearerToken))
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.description").value("The user does not have access to the given resource"));

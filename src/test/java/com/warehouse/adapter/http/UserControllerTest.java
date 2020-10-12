@@ -60,10 +60,11 @@ public class UserControllerTest {
     Role randomRole = roleRepository.add(new Role("::random-role::"));
 
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
-    String adminBearerToken = authenticate(admin);
 
     RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.singletonList(randomRole.getId()));
     String jsonContent = gson.toJson(registerUserRequest);
+
+    String adminBearerToken = authenticate(admin);
 
     mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
@@ -81,11 +82,12 @@ public class UserControllerTest {
 
   @Test
   void noneAdminUserTriesToRegisterNewUser() throws Exception {
-    User user = register(new User("::username::", "user@gmail.com", "::password::"));
-    String userBearerToken = authenticate(user);
+    User user = register(new User("::name::", "user@gmail.com", "::password::"));
 
     RegisterUserRequest registerUserRequest = new RegisterUserRequest("::iani::", "dummy@gmail.com", "::password::", Collections.emptyList());
     String jsonContent = gson.toJson(registerUserRequest);
+
+    String userBearerToken = authenticate(user);
 
     mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, userBearerToken)
@@ -98,12 +100,13 @@ public class UserControllerTest {
   void tryToRegisterUserWithTheSameEmail() throws Exception {
     Role adminRole = roleRepository.add(new Role("admin"));
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
-    String adminBearerToken = authenticate(admin);
 
-    register(new User("::name::", "dummy@gmail.com", "::password::"));
+    User registeredUser = register(new User("::name::", "dummy@gmail.com", "::password::"));
 
-    RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.emptyList());
+    RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", registeredUser.getEmail(), "::password::", Collections.emptyList());
     String jsonContent = gson.toJson(registerUserRequest);
+
+    String adminBearerToken = authenticate(admin);
 
     mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
@@ -115,12 +118,15 @@ public class UserControllerTest {
 
   @Test
   void tryToCreateUserWithUnexistingRole() throws Exception {
-    Role adminRole = roleRepository.add(new Role("admin"));
-    User admin = register(new User("admin", "admin@gmail.com", "::adminPassword::"), adminRole);
-    String adminBearerToken = authenticate(admin);
+    Long unexistingRoleId = 0L;
 
-    RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.singletonList(0L));
+    Role adminRole = roleRepository.add(new Role("admin"));
+    User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
+
+    RegisterUserRequest registerUserRequest = new RegisterUserRequest("::name::", "dummy@gmail.com", "::password::", Collections.singletonList(unexistingRoleId));
     String jsonContent = gson.toJson(registerUserRequest);
+
+    String adminBearerToken = authenticate(admin);
 
     mockMvc.perform(post("/users")
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
@@ -134,6 +140,7 @@ public class UserControllerTest {
   void getUserByIdSuccessfully() throws Exception {
     Role role = roleRepository.add(new Role("::random-role::"));
     User user = register(new User("::name::", "dummy@gmail.com", "::password::"), role);
+
     String userBearerToken = authenticate(user);
 
     mockMvc.perform(get("/users/{id}", user.getId())
@@ -151,10 +158,11 @@ public class UserControllerTest {
   void getUserByIdSuccessfullyAsAdmin() throws Exception {
     Role adminRole = roleRepository.add(new Role("admin"));
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
-    String adminBearerToken = authenticate(admin);
 
     Role randomRole = roleRepository.add(new Role("::random-role::"));
     User user = register(new User("::name::", "dummy@gmail.com", "::password::"), randomRole);
+
+    String adminBearerToken = authenticate(admin);
 
     mockMvc.perform(get("/users/{id}", user.getId())
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
@@ -169,8 +177,8 @@ public class UserControllerTest {
 
   @Test
   void userTryToAccessAnotherUserProfile() throws Exception {
-    User firstUser = register(new User("::username::", "firstUser@gmail.com", "::password::"));
-    User secondUser = register(new User("::username::", "secondUser@gmail.com", "::password::"));
+    User firstUser = register(new User("::firstUser::", "firstUser@gmail.com", "::password::"));
+    User secondUser = register(new User("::secondUser::", "secondUser@gmail.com", "::password::"));
 
     String fistUserBearerToken = authenticate(firstUser);
 
@@ -182,11 +190,14 @@ public class UserControllerTest {
 
   @Test
   void tryToGetUnexistingUser() throws Exception {
+    Long unexistingUserId = 0L;
+
     Role adminRole = roleRepository.add(new Role("admin"));
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
+
     String adminBearerToken = authenticate(admin);
 
-    mockMvc.perform(get("/users/{id}", 0L)
+    mockMvc.perform(get("/users/{id}", unexistingUserId)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.description").value("User with id 0 was not found"));
@@ -195,10 +206,11 @@ public class UserControllerTest {
   @Test
   void depositToUserWallet() throws Exception {
     User user = register(new User("::name::", "dummy@gmail.com", "::password::"));
-    String userBearerToken = authenticate(user);
 
     DepositRequest depositRequest = new DepositRequest(50.0);
     String depositRequestContent = gson.toJson(depositRequest);
+
+    String userBearerToken = authenticate(user);
 
     mockMvc.perform(put("/users/{id}/wallet/deposit", user.getId())
             .header(HttpHeaders.AUTHORIZATION, userBearerToken)
@@ -216,12 +228,13 @@ public class UserControllerTest {
   void adminDepositsToUserWallet() throws Exception {
     Role adminRole = roleRepository.add(new Role("admin"));
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
-    String adminBearerToken = authenticate(admin);
 
     User user = register(new User("::name::", "dummy@gmail.com", "::password::"));
 
     DepositRequest depositRequest = new DepositRequest(34.0);
     String depositRequestContent = gson.toJson(depositRequest);
+
+    String adminBearerToken = authenticate(admin);
 
     mockMvc.perform(put("/users/{id}/wallet/deposit", user.getId())
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
@@ -236,14 +249,17 @@ public class UserControllerTest {
 
   @Test
   void depositToUnexistingUserWallet() throws Exception {
+    Long unexistingUserId = 0L;
+
     Role adminRole = roleRepository.add(new Role("admin"));
     User admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
-    String adminBearerToken = authenticate(admin);
 
     DepositRequest depositRequest = new DepositRequest(34.0);
     String depositRequestContent = gson.toJson(depositRequest);
 
-    mockMvc.perform(put("/users/{id}/wallet/deposit", 0L)
+    String adminBearerToken = authenticate(admin);
+
+    mockMvc.perform(put("/users/{id}/wallet/deposit", unexistingUserId)
             .header(HttpHeaders.AUTHORIZATION, adminBearerToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(depositRequestContent))
@@ -253,13 +269,13 @@ public class UserControllerTest {
 
   @Test
   void userTryToDepositToAnotherUserWallet() throws Exception {
-    User firstUser = register(new User("::username::", "firstUser@gmail.com", "::password::"));
-    User secondUser = register(new User("::username::", "secondUser@gmail.com", "::password::"));
-
-    String fistUserBearerToken = authenticate(firstUser);
+    User firstUser = register(new User("::firstUser::", "firstUser@gmail.com", "::password::"));
+    User secondUser = register(new User("::secondUser::", "secondUser@gmail.com", "::password::"));
 
     DepositRequest depositRequest = new DepositRequest(50.0);
     String depositRequestContent = gson.toJson(depositRequest);
+
+    String fistUserBearerToken = authenticate(firstUser);
 
     mockMvc.perform(put("/users/{id}/wallet/deposit", secondUser.getId())
             .header(HttpHeaders.AUTHORIZATION, fistUserBearerToken)
