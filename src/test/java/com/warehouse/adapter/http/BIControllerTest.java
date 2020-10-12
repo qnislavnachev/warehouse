@@ -5,6 +5,7 @@ import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.adapter.dao.user.UserRepository;
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
 import com.warehouse.adapter.security.AuthenticatedUser;
+import com.warehouse.adapter.security.Authority;
 import com.warehouse.adapter.security.WebTokenGenerator;
 import com.warehouse.core.OrderItem;
 import com.warehouse.core.Product;
@@ -19,8 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class BIControllerTest {
 
   @Autowired
@@ -183,7 +184,7 @@ public class BIControllerTest {
   }
 
   private String authenticate(User user) {
-    List<GrantedAuthority> authorities = user.getRoles().stream().map(it -> new SimpleGrantedAuthority("ROLE_" + it.getName())).collect(Collectors.toList());
+    List<Authority> authorities = user.getRoles().stream().map(Authority::new).collect(Collectors.toList());
     AuthenticatedUser authUser = new AuthenticatedUser(user.getId(), user.getEmail(), user.getPassword(), authorities);
 
     return "Bearer " + tokenGenerator.generate(authUser);

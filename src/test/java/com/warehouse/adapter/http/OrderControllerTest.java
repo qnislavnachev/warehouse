@@ -10,6 +10,7 @@ import com.warehouse.adapter.http.dto.CreateOrderRequest;
 import com.warehouse.adapter.http.dto.OrderItemDto;
 import com.warehouse.adapter.http.dto.PaymentType;
 import com.warehouse.adapter.security.AuthenticatedUser;
+import com.warehouse.adapter.security.Authority;
 import com.warehouse.adapter.security.WebTokenGenerator;
 import com.warehouse.core.*;
 import com.warehouse.core.exceptions.UserAlreadyExistsException;
@@ -22,8 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class OrderControllerTest {
 
   @Autowired
@@ -255,7 +256,7 @@ public class OrderControllerTest {
   }
 
   private String authenticate(User user) {
-    List<GrantedAuthority> authorities = user.getRoles().stream().map(it -> new SimpleGrantedAuthority("ROLE_" + it.getName())).collect(Collectors.toList());
+    List<Authority> authorities = user.getRoles().stream().map(Authority::new).collect(Collectors.toList());
     AuthenticatedUser authUser = new AuthenticatedUser(user.getId(), user.getEmail(), user.getPassword(), authorities);
 
     return "Bearer " + tokenGenerator.generate(authUser);
