@@ -1,9 +1,12 @@
 package com.warehouse.payment;
 
-import com.warehouse.adapter.dao.order.OrderFacade;
-import com.warehouse.adapter.dao.warehouse.WarehouseStorageFacade;
+import com.warehouse.adapter.facades.OrderFacade;
+import com.warehouse.adapter.facades.WarehouseStorageFacade;
 import com.warehouse.core.Order;
-import com.warehouse.core.exceptions.*;
+import com.warehouse.core.exceptions.NoEnoughAmountException;
+import com.warehouse.core.exceptions.NoEnoughQuantityException;
+import com.warehouse.core.exceptions.SystemException;
+import com.warehouse.core.exceptions.UnableToSellStockException;
 
 abstract class AppPaymentStrategy implements PaymentStrategy {
   private final OrderFacade orderFacade;
@@ -15,7 +18,7 @@ abstract class AppPaymentStrategy implements PaymentStrategy {
   }
 
   @Override
-  public Order pay(Order order) throws InvalidPaymentSourceException, NoEnoughAmountException, SystemException {
+  public Order pay(Order order) throws NoEnoughAmountException, SystemException {
     Order paidOrder = orderFacade.markAsPaid(order);
 
     try {
@@ -32,5 +35,5 @@ abstract class AppPaymentStrategy implements PaymentStrategy {
     return paidOrder;
   }
 
-  public abstract void collectMoney(Order order) throws InvalidPaymentSourceException, NoEnoughAmountException;
+  public abstract void collectMoney(Order order) throws NoEnoughAmountException, SystemException;
 }

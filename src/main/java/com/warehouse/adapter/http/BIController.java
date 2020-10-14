@@ -4,9 +4,9 @@ import com.warehouse.adapter.http.dto.Error;
 import com.warehouse.adapter.http.dto.Response;
 import com.warehouse.adapter.services.BIService;
 import com.warehouse.core.exceptions.ProductNotFoundException;
-import com.warehouse.core.exceptions.SystemException;
 import com.warehouse.core.exceptions.UserNotFoundException;
-import com.warehouse.exports.ExportType;
+import com.warehouse.exports.Report;
+import com.warehouse.exports.ReportType;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.NotSupportedException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 @RestController
 public class BIController {
@@ -64,22 +61,18 @@ public class BIController {
     }
   }
 
-  @GetMapping("/bi/products/export")
-  public ResponseEntity<Object> getProductsExport(@RequestParam String type) {
+  @GetMapping("/bi/products/report")
+  public ResponseEntity<Object> getProductsReport(@RequestParam String type) {
     try {
-      ExportType exportType = ExportType.valueOf(type);
+      ReportType reportType = ReportType.valueOf(type);
 
-      //TODO: the file should be deleted
-      File file = biService.generateProductsReport(exportType);
-      InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+      Report report = biService.generateProductsReport(reportType);
+      InputStreamResource resource = new InputStreamResource(report.getContent());
 
-      return Response.ok(file.length(), resource);
+      return Response.ok(report.getFileName(), report.getContentLength(), resource);
 
     } catch (NotSupportedException | IllegalArgumentException e) {
       return Response.conflict(Error.of("Export type is not supported"));
-
-    } catch (SystemException | FileNotFoundException e) {
-      return Response.serverError("The generation of the export failed due to internal server error");
     }
   }
 }

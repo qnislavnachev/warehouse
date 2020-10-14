@@ -1,31 +1,28 @@
 package com.warehouse.exports.csv;
 
-import com.warehouse.exports.AbstractExporter;
-import com.warehouse.exports.Exportable;
-import com.warehouse.exports.Marshaller;
+import com.warehouse.exports.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class CsvExporter extends AbstractExporter {
   private final Marshaller marshaller;
-  private static final String extension = ".csv";
 
   public CsvExporter() {
     this.marshaller = new CsvMarshaller();
   }
 
   @Override
-  public File export(List<? extends Exportable> exportables) throws IOException {
-    StringBuilder builder = new StringBuilder();
+  public Report generateReport(List<? extends Exportable> exportables) {
+    StringJoiner joiner = new StringJoiner(",\n");
 
-    //TODO: headers should be added
     for (Exportable exportable : exportables) {
       String row = exportable.accept(marshaller);
-      builder.append(row).append("\n");
+      joiner.add(row);
     }
 
-    return buildFile(builder.toString(), extension);
+    ByteArrayInputStream content = new ByteArrayInputStream(joiner.toString().getBytes());
+    return new Report(ReportType.CSV, content);
   }
 }

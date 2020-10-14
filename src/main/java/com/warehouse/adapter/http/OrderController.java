@@ -87,9 +87,6 @@ public class OrderController {
     } catch (NotSupportedException | IllegalArgumentException e) {
       return Response.badRequest(Error.of("Payment type is not supported yet"));
 
-    } catch (InvalidPaymentSourceException e) {
-      return Response.notFound(Error.of("Unable to process payment due to error with the payment source"));
-
     } catch (OrderNotFoundException e) {
       return Response.notFound(Error.of("Order with id %s was not found", e.orderId));
 

@@ -1,9 +1,9 @@
 package com.warehouse.adapter.http;
 
-import com.warehouse.adapter.dao.order.OrderFacade;
 import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.adapter.dao.user.UserRepository;
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
+import com.warehouse.adapter.facades.OrderFacade;
 import com.warehouse.adapter.security.AuthenticatedUser;
 import com.warehouse.adapter.security.Authority;
 import com.warehouse.adapter.security.WebTokenGenerator;
@@ -12,7 +12,7 @@ import com.warehouse.core.Product;
 import com.warehouse.core.Role;
 import com.warehouse.core.User;
 import com.warehouse.core.exceptions.UserAlreadyExistsException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,11 +32,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BIControllerTest {
 
   @Autowired
@@ -61,8 +59,8 @@ public class BIControllerTest {
   private User admin;
   private Role adminRole;
 
-  @BeforeAll
-  void beforeAll() throws Exception {
+  @BeforeEach
+  void beforeEach() throws Exception {
     adminRole = roleRepository.add(new Role("admin"));
     admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
   }
@@ -77,14 +75,14 @@ public class BIControllerTest {
             new OrderItem(chocolate.getId(), 20.0)
     );
 
-    orderFacade.create(admin.getId(), firstOrderItems);
+    orderFacade.createOrder(admin.getId(), firstOrderItems);
 
     List<OrderItem> secondOrderItems = Arrays.asList(
             new OrderItem(bananas.getId(), 5.0),
             new OrderItem(chocolate.getId(), 29.0)
     );
 
-    orderFacade.create(admin.getId(), secondOrderItems);
+    orderFacade.createOrder(admin.getId(), secondOrderItems);
 
     String adminBearerToken = authenticate(admin);
 
@@ -105,14 +103,14 @@ public class BIControllerTest {
             new OrderItem(chocolate.getId(), 20.0)
     );
 
-    orderFacade.create(admin.getId(), firstOrderItems);
+    orderFacade.createOrder(admin.getId(), firstOrderItems);
 
     List<OrderItem> secondOrderItems = Arrays.asList(
             new OrderItem(bananas.getId(), 5.0),
             new OrderItem(chocolate.getId(), 29.0)
     );
 
-    orderFacade.create(admin.getId(), secondOrderItems);
+    orderFacade.createOrder(admin.getId(), secondOrderItems);
 
     String adminBearerToken = authenticate(admin);
 
@@ -140,23 +138,23 @@ public class BIControllerTest {
             new OrderItem(chocolate.getId(), 20.0)
     );
 
-    orderFacade.create(admin.getId(), firstOrderItems);
+    orderFacade.createOrder(admin.getId(), firstOrderItems);
 
     List<OrderItem> secondOrderItems = Arrays.asList(
             new OrderItem(bananas.getId(), 5.0),
             new OrderItem(chocolate.getId(), 29.0)
     );
 
-    orderFacade.create(admin.getId(), secondOrderItems);
+    orderFacade.createOrder(admin.getId(), secondOrderItems);
 
     List<OrderItem> thirdOrderItems = Arrays.asList(
             new OrderItem(bananas.getId(), 1.0),
             new OrderItem(chocolate.getId(), 29.0)
     );
-    orderFacade.create(anotherAdmin.getId(), thirdOrderItems);
+    orderFacade.createOrder(anotherAdmin.getId(), thirdOrderItems);
 
     List<OrderItem> fourthOrderItems = Arrays.asList(new OrderItem(bananas.getId(), 5.0));
-    orderFacade.create(anotherAdmin.getId(), fourthOrderItems);
+    orderFacade.createOrder(anotherAdmin.getId(), fourthOrderItems);
 
     String adminBearerToken = authenticate(admin);
 

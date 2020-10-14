@@ -15,7 +15,7 @@ import com.warehouse.adapter.security.WebTokenGenerator;
 import com.warehouse.core.*;
 import com.warehouse.core.exceptions.UserAlreadyExistsException;
 import com.warehouse.payment.PaymentMethod;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,11 +36,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class OrderControllerTest {
 
   @Autowired
@@ -69,8 +67,8 @@ public class OrderControllerTest {
 
   private User admin;
 
-  @BeforeAll
-  void beforeAll() throws Exception {
+  @BeforeEach
+  void beforeEach() throws Exception {
     Role adminRole = roleRepository.add(new Role("admin"));
     admin = register(new User("admin", "admin@gmail.com", "::password::"), adminRole);
     walletRepository.deposit(admin.getId(), 10000.0);
@@ -227,8 +225,8 @@ public class OrderControllerTest {
     List<OrderItem> orderItems = Collections.singletonList(new OrderItem(product.getId(), 20.0));
     Order order = orderRepository.create(new Order(admin.getId(), orderItems, 50.0, false));
 
-    String adminBearerToken = authenticate(admin);
     String jsonContent = gson.toJson(new PaymentType(PaymentMethod.WALLET.toString()));
+    String adminBearerToken = authenticate(admin);
 
     mockMvc.perform(put("/accounting/orders/{id}/pay", order.getId())
             .contentType(MediaType.APPLICATION_JSON)
@@ -242,6 +240,97 @@ public class OrderControllerTest {
             .andExpect(jsonPath("$.orderItems", hasSize(1)))
             .andExpect(jsonPath("$.orderItems[0].productId").value(product.getId()))
             .andExpect(jsonPath("$.orderItems[0].quantity").value(20.0));
+  }
+
+  @Test
+  void userTriesToPayOrderOwnedByAnotherUser() throws Exception {
+    Product product = addProduct(new Product("Apples", 0.30, 50.0));
+    List<OrderItem> orderItems = Collections.singletonList(new OrderItem(product.getId(), 20.0));
+    Order order = orderRepository.create(new Order(admin.getId(), orderItems, 50.0, false));
+
+    User randomUser = register(new User("::name::", "dummy@gmail.com", "::password::"));
+
+    String jsonContent = gson.toJson(new PaymentType(PaymentMethod.WALLET.toString()));
+    String randomUserBearerToken = authenticate(randomUser);
+
+    mockMvc.perform(put("/accounting/orders/{id}/pay", order.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonContent)
+            .header(HttpHeaders.AUTHORIZATION, randomUserBearerToken))
+            .andExpect(status().isForbidden())
+            .andExpect(jsonPath("$.description").value("The user does not have access to the given resource"));
+  }
+
+  @Test
+  void userTriesToPayAlreadyPaidOrder() throws Exception {
+    Product product = addProduct(new Product("Apples", 0.30, 50.0));
+    List<OrderItem> orderItems = Collections.singletonList(new OrderItem(product.getId(), 20.0));
+
+    Order order = orderRepository.create(new Order(admin.getId(), orderItems, 50.0, false));
+    orderRepository.markAsPaid(order);
+
+    String jsonContent = gson.toJson(new PaymentType(PaymentMethod.WALLET.toString()));
+    String adminBearerToken = authenticate(admin);
+
+    mockMvc.perform(put("/accounting/orders/{id}/pay", order.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonContent)
+            .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.description").value("The order with id 1 is already paid"));
+  }
+
+  @Test
+  void userTriesToPayOrderWithNonSupportedPaymentType() throws Exception {
+    Product product = addProduct(new Product("Apples", 0.30, 50.0));
+    List<OrderItem> orderItems = Collections.singletonList(new OrderItem(product.getId(), 20.0));
+
+    Order order = orderRepository.create(new Order(admin.getId(), orderItems, 50.0, false));
+    orderRepository.markAsPaid(order);
+
+    String jsonContent = gson.toJson(new PaymentType("ONLINE"));
+    String adminBearerToken = authenticate(admin);
+
+    mockMvc.perform(put("/accounting/orders/{id}/pay", order.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonContent)
+            .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.description").value("Payment type is not supported yet"));
+  }
+
+  @Test
+  void userTriesToPayUnexistingOrder() throws Exception {
+    Long unexistingOrderId = 0L;
+
+    String jsonContent = gson.toJson(new PaymentType(PaymentMethod.WALLET.toString()));
+    String adminBearerToken = authenticate(admin);
+
+    mockMvc.perform(put("/accounting/orders/{id}/pay", unexistingOrderId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonContent)
+            .header(HttpHeaders.AUTHORIZATION, adminBearerToken))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.description").value("Order with id 0 was not found"));
+  }
+
+  @Test
+  void userDoesNotHaveEnoughMoneyToPay() throws Exception {
+    Product product = addProduct(new Product("Apples", 0.30, 50.0));
+    User user = register(new User("::name::", "dummy@gmail.com", "::password::"));
+
+    List<OrderItem> orderItems = Collections.singletonList(new OrderItem(product.getId(), 20.0));
+    Order order = orderRepository.create(new Order(user.getId(), orderItems, 50.0, false));
+
+    String jsonContent = gson.toJson(new PaymentType(PaymentMethod.WALLET.toString()));
+    String userBearerToken = authenticate(user);
+
+    mockMvc.perform(put("/accounting/orders/{id}/pay", order.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonContent)
+            .header(HttpHeaders.AUTHORIZATION, userBearerToken))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.description").value("Unable to process payment due to insufficient amount"));
   }
 
 

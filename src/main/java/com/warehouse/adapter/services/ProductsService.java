@@ -1,6 +1,6 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.dao.warehouse.WarehouseStorageFacade;
+import com.warehouse.adapter.facades.WarehouseStorageFacade;
 import com.warehouse.core.Product;
 import com.warehouse.core.events.ProductsLoadedEvent;
 import com.warehouse.core.exceptions.ProductNotFoundException;

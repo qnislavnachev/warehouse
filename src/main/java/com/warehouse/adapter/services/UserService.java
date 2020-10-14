@@ -1,6 +1,6 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.dao.user.UserFacade;
+import com.warehouse.adapter.facades.UserFacade;
 import com.warehouse.core.User;
 import com.warehouse.core.events.UserRegisteredEvent;
 import com.warehouse.core.exceptions.RoleNotFoundException;

@@ -1,5 +1,6 @@
-package com.warehouse.adapter.dao.warehouse;
+package com.warehouse.adapter.facades;
 
+import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
 import com.warehouse.core.Order;
 import com.warehouse.core.Product;
 import com.warehouse.core.exceptions.NoEnoughQuantityException;

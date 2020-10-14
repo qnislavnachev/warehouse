@@ -1,7 +1,7 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.dao.order.OrderFacade;
-import com.warehouse.adapter.dao.payment.PaymentsFacade;
+import com.warehouse.adapter.facades.OrderFacade;
+import com.warehouse.adapter.facades.PaymentsFacade;
 import com.warehouse.core.Order;
 import com.warehouse.core.OrderItem;
 import com.warehouse.core.events.OrderCreatedEvent;
@@ -27,7 +27,7 @@ public class OrderService {
   }
 
   public Order createOrder(Long ownerId, List<OrderItem> orderItems) throws NoEnoughQuantityException, ProductsWereNotFoundException {
-    Order order = orderFacade.create(ownerId, orderItems);
+    Order order = orderFacade.createOrder(ownerId, orderItems);
     eventBus.publish(new OrderCreatedEvent(order.duplicate()));
 
     return order;
@@ -37,7 +37,7 @@ public class OrderService {
     return orderFacade.getOrder(id);
   }
 
-  public Order payOrder(Order order, PaymentMethod paymentMethod) throws SystemException, NoEnoughAmountException, NotSupportedException, InvalidPaymentSourceException {
+  public Order payOrder(Order order, PaymentMethod paymentMethod) throws SystemException, NoEnoughAmountException, NotSupportedException {
     Order paidOrder = paymentsFacade.payOrder(order, paymentMethod);
 
     eventBus.publish(new OrderPaidEvent(paidOrder.duplicate()));

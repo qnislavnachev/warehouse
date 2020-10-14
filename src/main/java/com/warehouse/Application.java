@@ -1,6 +1,6 @@
 package com.warehouse;
 
-import com.warehouse.adapter.dao.user.UserFacade;
+import com.warehouse.adapter.facades.UserFacade;
 import com.warehouse.adapter.http.filters.SecurityFilter;
 import com.warehouse.adapter.security.WebTokenGenerator;
 import com.warehouse.adapter.security.WebTokenParser;
@@ -8,6 +8,7 @@ import com.warehouse.adapter.security.jwt.JwtGenerator;
 import com.warehouse.adapter.security.jwt.JwtParser;
 import com.warehouse.adapter.services.security.UserAuthenticationService;
 import com.warehouse.core.Role;
+import com.warehouse.eventbus.AppEventBus;
 import com.warehouse.eventbus.AppEventManager;
 import com.warehouse.eventbus.EventBus;
 import com.warehouse.eventbus.listeners.EmailNotifier;
@@ -21,13 +22,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,8 +43,7 @@ public class Application extends WebSecurityConfigurerAdapter {
 
   public Application(ApplicationContext context) {
     this.context = context;
-    this.unauthorizedEndpoints = new HashSet<>();
-    this.unauthorizedEndpoints.add("/auth");
+    this.unauthorizedEndpoints = new HashSet<>(Collections.singletonList("/auth"));
   }
 
   @Override
@@ -97,7 +97,7 @@ public class Application extends WebSecurityConfigurerAdapter {
     eventManager.register(loggingListener);
     eventManager.register(emailNotifier);
 
-    return new EventBus(eventManager);
+    return new AppEventBus(eventManager);
   }
 
   @Bean

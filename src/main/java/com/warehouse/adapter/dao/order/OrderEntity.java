@@ -57,4 +57,8 @@ class OrderEntity {
   public boolean isPaid() {
     return isPaid;
   }
+
+  public void markAsPaid() {
+    this.isPaid = true;
+  }
 }

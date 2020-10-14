@@ -1,6 +1,7 @@
 package com.warehouse.adapter.http.dto;
 
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -14,8 +15,9 @@ public class Response {
     return ResponseEntity.status(200).build();
   }
 
-  public static ResponseEntity<Object> ok(Long contentLength, InputStreamResource resource) {
+  public static ResponseEntity<Object> ok(String fileName, Long contentLength, InputStreamResource resource) {
     return ResponseEntity.status(200)
+            .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment;filename=%s", fileName))
             .contentLength(contentLength)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(resource);

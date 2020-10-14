@@ -9,12 +9,12 @@ import javax.transaction.NotSupportedException;
 @Component
 public class ExporterFactory {
 
-  public Exporter get(ExportType type) throws NotSupportedException {
-    if (type.equals(ExportType.CSV)) {
+  public Exporter get(ReportType type) throws NotSupportedException {
+    if (type.equals(ReportType.CSV)) {
       return new CsvExporter();
     }
 
-    if (type.equals(ExportType.JSON)) {
+    if (type.equals(ReportType.JSON)) {
       return new JsonExporter();
     }
 

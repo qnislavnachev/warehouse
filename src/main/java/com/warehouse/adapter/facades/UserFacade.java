@@ -1,6 +1,8 @@
-package com.warehouse.adapter.dao.user;
+package com.warehouse.adapter.facades;
 
 import com.warehouse.adapter.dao.role.RoleRepository;
+import com.warehouse.adapter.dao.user.UserRepository;
+import com.warehouse.adapter.dao.user.WalletRepository;
 import com.warehouse.core.Role;
 import com.warehouse.core.User;
 import com.warehouse.core.exceptions.*;
@@ -29,6 +31,7 @@ public class UserFacade {
 
     List<Role> roles = roleRepository.getRoles(rolesIds);
     if (roles.size() != rolesIds.size()) {
+      //TODO: provide an info for the missing roles
       throw new RoleNotFoundException();
     }
 

@@ -1,5 +1,6 @@
-package com.warehouse.adapter.dao.bi;
+package com.warehouse.adapter.facades;
 
+import com.warehouse.adapter.dao.bi.BIRepository;
 import com.warehouse.adapter.dao.user.UserRepository;
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
 import com.warehouse.core.Product;

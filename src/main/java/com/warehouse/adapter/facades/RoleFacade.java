@@ -1,5 +1,6 @@
-package com.warehouse.adapter.dao.role;
+package com.warehouse.adapter.facades;
 
+import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.core.Role;
 import org.springframework.stereotype.Component;
 

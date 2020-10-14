@@ -13,7 +13,7 @@ class CsvMarshaller implements Marshaller {
 
     builder.append(user.getId()).append(",");
     builder.append(user.getEmail()).append(",");
-    builder.append(user.getName()).append(",");
+    builder.append(user.getName());
 
     return builder.toString();
   }
@@ -25,7 +25,7 @@ class CsvMarshaller implements Marshaller {
     builder.append(order.getId()).append(",");
     builder.append(order.getOwnerId()).append(",");
     builder.append(order.getPrice()).append(",");
-    builder.append(order.isPaid()).append(",");
+    builder.append(order.isPaid());
 
     return builder.toString();
   }
@@ -38,7 +38,7 @@ class CsvMarshaller implements Marshaller {
     builder.append(product.getName()).append(",");
     builder.append(product.getQuantity()).append(",");
     builder.append(product.getPrice()).append(",");
-    builder.append(product.getTotalPrice()).append(",");
+    builder.append(product.getTotalPrice());
 
     return builder.toString();
   }

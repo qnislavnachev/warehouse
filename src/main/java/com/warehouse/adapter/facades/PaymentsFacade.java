@@ -1,7 +1,6 @@
-package com.warehouse.adapter.dao.payment;
+package com.warehouse.adapter.facades;
 
 import com.warehouse.core.Order;
-import com.warehouse.core.exceptions.InvalidPaymentSourceException;
 import com.warehouse.core.exceptions.NoEnoughAmountException;
 import com.warehouse.core.exceptions.SystemException;
 import com.warehouse.payment.PaymentMethod;
@@ -21,7 +20,7 @@ public class PaymentsFacade {
   }
 
   @Transactional
-  public Order payOrder(Order order, PaymentMethod paymentMethod) throws SystemException, NoEnoughAmountException, NotSupportedException, InvalidPaymentSourceException {
+  public Order payOrder(Order order, PaymentMethod paymentMethod) throws SystemException, NoEnoughAmountException, NotSupportedException {
     PaymentStrategy strategy = paymentStrategyFactory.get(paymentMethod);
     return strategy.pay(order);
   }

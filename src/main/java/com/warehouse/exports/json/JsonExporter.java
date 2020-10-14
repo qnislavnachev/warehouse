@@ -1,33 +1,27 @@
 package com.warehouse.exports.json;
 
-import com.warehouse.exports.AbstractExporter;
-import com.warehouse.exports.Exportable;
-import com.warehouse.exports.Marshaller;
+import com.warehouse.exports.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class JsonExporter extends AbstractExporter {
   private final Marshaller marshaller;
-  private static final String extension = ".json";
 
   public JsonExporter() {
     this.marshaller = new JsonMarshaller();
   }
 
-  public File export(List<? extends Exportable> exportables) throws IOException {
-    StringBuilder builder = new StringBuilder();
-
-    builder.append("[\n");
+  public Report generateReport(List<? extends Exportable> exportables) {
+    StringJoiner joiner = new StringJoiner(",\n", "[\n", "\n]");
 
     for (Exportable exportable : exportables) {
       String row = exportable.accept(marshaller);
-      builder.append(row).append(",").append("\n");
+      joiner.add(row);
     }
 
-    builder.append("]");
-
-    return buildFile(builder.toString(), extension);
+    ByteArrayInputStream content = new ByteArrayInputStream(joiner.toString().getBytes());
+    return new Report(ReportType.JSON, content);
   }
 }

@@ -3,8 +3,6 @@ package com.warehouse.adapter.security.jwt;
 import com.warehouse.adapter.security.Authority;
 import com.warehouse.adapter.security.WebToken;
 import io.jsonwebtoken.Claims;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.sql.Date;
 import java.time.Instant;

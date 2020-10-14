@@ -1,19 +1,17 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.dao.bi.BiFacade;
-import com.warehouse.adapter.dao.warehouse.WarehouseStorageFacade;
+import com.warehouse.adapter.facades.BiFacade;
+import com.warehouse.adapter.facades.WarehouseStorageFacade;
 import com.warehouse.core.Product;
 import com.warehouse.core.exceptions.ProductNotFoundException;
-import com.warehouse.core.exceptions.SystemException;
 import com.warehouse.core.exceptions.UserNotFoundException;
-import com.warehouse.exports.ExportType;
 import com.warehouse.exports.Exporter;
 import com.warehouse.exports.ExporterFactory;
+import com.warehouse.exports.Report;
+import com.warehouse.exports.ReportType;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.NotSupportedException;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -41,15 +39,11 @@ public class BIService {
     return biFacade.getOrderedProductAverageAmount(userId, productId);
   }
 
-  public File generateProductsReport(ExportType exportType) throws NotSupportedException, SystemException {
-    Exporter exporter = exporterFactory.get(exportType);
+  public Report generateProductsReport(ReportType reportType) throws NotSupportedException {
+    Exporter exporter = exporterFactory.get(reportType);
     List<Product> products = warehouseStorageFacade.getProducts();
 
-    try {
-      return exporter.export(products);
 
-    } catch (IOException e) {
-      throw new SystemException(e);
-    }
+    return exporter.generateReport(products);
   }
 }

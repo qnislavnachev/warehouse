@@ -1,5 +1,6 @@
-package com.warehouse.adapter.dao.order;
+package com.warehouse.adapter.facades;
 
+import com.warehouse.adapter.dao.order.OrderRepository;
 import com.warehouse.adapter.dao.warehouse.ReservationRequest;
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
 import com.warehouse.core.Order;
@@ -24,7 +25,7 @@ public class OrderFacade {
   }
 
   @Transactional
-  public Order create(Long ownerId, List<OrderItem> orderItems) throws NoEnoughQuantityException, ProductsWereNotFoundException {
+  public Order createOrder(Long ownerId, List<OrderItem> orderItems) throws NoEnoughQuantityException, ProductsWereNotFoundException {
     ReservationRequest reservationRequest = ReservationRequest.of(orderItems);
     Reservation reservation = warehouseRepository.reserveProducts(reservationRequest);
 

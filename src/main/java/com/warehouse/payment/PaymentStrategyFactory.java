@@ -1,8 +1,8 @@
 package com.warehouse.payment;
 
-import com.warehouse.adapter.dao.order.OrderFacade;
-import com.warehouse.adapter.dao.user.UserFacade;
-import com.warehouse.adapter.dao.warehouse.WarehouseStorageFacade;
+import com.warehouse.adapter.facades.OrderFacade;
+import com.warehouse.adapter.facades.UserFacade;
+import com.warehouse.adapter.facades.WarehouseStorageFacade;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.NotSupportedException;

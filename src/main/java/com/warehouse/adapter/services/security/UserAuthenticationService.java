@@ -1,13 +1,10 @@
 package com.warehouse.adapter.services.security;
 
-import com.warehouse.adapter.dao.user.UserFacade;
+import com.warehouse.adapter.facades.UserFacade;
 import com.warehouse.adapter.security.AuthenticatedUser;
 import com.warehouse.adapter.security.Authority;
 import com.warehouse.core.User;
 import com.warehouse.core.exceptions.UserNotFoundException;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -74,6 +74,7 @@ class PersistentWarehouseRepository implements WarehouseRepository {
     List<ProductEntity> productEntities = database.findAllById(reservationRequest.getProductsIds());
 
     if (reservationRequest.getProductsIds().size() != productEntities.size()) {
+      //TODO: provide info for the missing products
       throw new ProductsWereNotFoundException();
     }
 
