@@ -15,12 +15,12 @@ public class Response {
     return ResponseEntity.status(200).build();
   }
 
-  public static ResponseEntity<Object> ok(String fileName, Long contentLength, InputStreamResource resource) {
+  public static ResponseEntity<Object> ok(String fileName, Long contentLength, InputStreamResource content) {
     return ResponseEntity.status(200)
             .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment;filename=%s", fileName))
             .contentLength(contentLength)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
+            .body(content);
   }
 
   public static ResponseEntity<Object> created() {

@@ -45,12 +45,6 @@ class PersistentOrderRepository implements OrderRepository {
   @Override
   public Order markAsPaid(Order order) {
     database.pay(order.getId());
-    database.flush();
-//    OrderEntity orderEntity = database.getOne(order.getId());
-//
-//    orderEntity.markAsPaid();
-//
-//    database.save(orderEntity);
 
     return new Order(order.getId(), order.getOwnerId(), order.getOrderItems(), order.getPrice(), true);
   }
