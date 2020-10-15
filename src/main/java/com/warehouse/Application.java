@@ -1,6 +1,6 @@
 package com.warehouse;
 
-import com.warehouse.adapter.facades.UserFacade;
+import com.warehouse.facades.UserFacade;
 import com.warehouse.adapter.http.filters.SecurityFilter;
 import com.warehouse.adapter.security.WebTokenGenerator;
 import com.warehouse.adapter.security.WebTokenParser;

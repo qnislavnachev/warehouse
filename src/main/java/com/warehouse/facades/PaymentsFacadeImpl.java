@@ -1,4 +1,4 @@
-package com.warehouse.adapter.facades;
+package com.warehouse.facades;
 
 import com.warehouse.core.Order;
 import com.warehouse.core.exceptions.NoEnoughAmountException;
@@ -12,14 +12,15 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.Transactional;
 
 @Component
-public class PaymentsFacade {
+public class PaymentsFacadeImpl implements PaymentsFacade {
   private final PaymentStrategyFactory paymentStrategyFactory;
 
-  public PaymentsFacade(PaymentStrategyFactory paymentStrategyFactory) {
+  public PaymentsFacadeImpl(PaymentStrategyFactory paymentStrategyFactory) {
     this.paymentStrategyFactory = paymentStrategyFactory;
   }
 
   @Transactional
+  @Override
   public Order payOrder(Order order, PaymentMethod paymentMethod) throws SystemException, NoEnoughAmountException, NotSupportedException {
     PaymentStrategy strategy = paymentStrategyFactory.get(paymentMethod);
     return strategy.pay(order);

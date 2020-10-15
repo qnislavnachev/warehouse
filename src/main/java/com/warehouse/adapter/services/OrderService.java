@@ -1,7 +1,7 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.facades.OrderFacade;
-import com.warehouse.adapter.facades.PaymentsFacade;
+import com.warehouse.facades.OrderFacade;
+import com.warehouse.facades.PaymentsFacade;
 import com.warehouse.core.Order;
 import com.warehouse.core.OrderItem;
 import com.warehouse.core.events.OrderCreatedEvent;

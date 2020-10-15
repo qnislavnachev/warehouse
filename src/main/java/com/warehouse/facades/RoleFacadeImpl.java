@@ -1,4 +1,4 @@
-package com.warehouse.adapter.facades;
+package com.warehouse.facades;
 
 import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.core.Role;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class RoleFacade {
+public class RoleFacadeImpl implements RoleFacade {
   private final RoleRepository repository;
 
-  public RoleFacade(RoleRepository repository) {
+  public RoleFacadeImpl(RoleRepository repository) {
     this.repository = repository;
   }
 

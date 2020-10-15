@@ -1,8 +1,8 @@
 package com.warehouse.payment;
 
-import com.warehouse.adapter.facades.OrderFacade;
-import com.warehouse.adapter.facades.UserFacade;
-import com.warehouse.adapter.facades.WarehouseStorageFacade;
+import com.warehouse.facades.OrderFacade;
+import com.warehouse.facades.UserFacade;
+import com.warehouse.facades.WarehouseStorageFacade;
 import com.warehouse.core.Order;
 import com.warehouse.core.exceptions.NoEnoughAmountException;
 import com.warehouse.core.exceptions.SystemException;

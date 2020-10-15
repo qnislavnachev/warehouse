@@ -1,4 +1,4 @@
-package com.warehouse.adapter.facades;
+package com.warehouse.facades;
 
 import com.warehouse.adapter.dao.order.OrderRepository;
 import com.warehouse.adapter.dao.warehouse.ReservationRequest;
@@ -15,16 +15,17 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
-public class OrderFacade {
+public class OrderFacadeImpl implements OrderFacade {
   private final OrderRepository orderRepository;
   private final WarehouseRepository warehouseRepository;
 
-  public OrderFacade(OrderRepository orderRepository, WarehouseRepository warehouseRepository) {
+  public OrderFacadeImpl(OrderRepository orderRepository, WarehouseRepository warehouseRepository) {
     this.orderRepository = orderRepository;
     this.warehouseRepository = warehouseRepository;
   }
 
   @Transactional
+  @Override
   public Order createOrder(Long ownerId, List<OrderItem> orderItems) throws NoEnoughQuantityException, ProductsWereNotFoundException {
     ReservationRequest reservationRequest = ReservationRequest.of(orderItems);
     Reservation reservation = warehouseRepository.reserveProducts(reservationRequest);
@@ -34,10 +35,12 @@ public class OrderFacade {
     return orderRepository.create(order);
   }
 
+  @Override
   public Order getOrder(Long id) throws OrderNotFoundException {
     return orderRepository.getOrder(id);
   }
 
+  @Override
   public Order markAsPaid(Order order) {
     return orderRepository.markAsPaid(order);
   }

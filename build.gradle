@@ -30,8 +30,8 @@ dependencies {
     compile "com.google.code.gson:gson:2.8.6"
     compile "mysql:mysql-connector-java:8.0.21"
 
-
-    testCompile "junit:junit:4.12"
     testCompile "com.h2database:h2:1.4.200"
     testCompile "org.springframework.boot:spring-boot-starter-test:$springVersion"
+    testCompile "org.jmock:jmock:2.12.0"
+    testCompile 'org.hamcrest:hamcrest-core:2.2'
 }

@@ -1,7 +1,7 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.facades.BiFacade;
-import com.warehouse.adapter.facades.WarehouseStorageFacade;
+import com.warehouse.facades.BiFacade;
+import com.warehouse.facades.WarehouseStorageFacade;
 import com.warehouse.core.Product;
 import com.warehouse.core.exceptions.ProductNotFoundException;
 import com.warehouse.core.exceptions.UserNotFoundException;
@@ -42,7 +42,6 @@ public class BIService {
   public Report generateProductsReport(ReportType reportType) throws NotSupportedException {
     Exporter exporter = exporterFactory.get(reportType);
     List<Product> products = warehouseStorageFacade.getProducts();
-
 
     return exporter.generateReport(products);
   }

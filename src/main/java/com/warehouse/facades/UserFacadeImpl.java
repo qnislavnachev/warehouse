@@ -1,4 +1,4 @@
-package com.warehouse.adapter.facades;
+package com.warehouse.facades;
 
 import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.adapter.dao.user.UserRepository;
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class UserFacade {
+public class UserFacadeImpl implements UserFacade {
   private final UserRepository userRepository;
   private final WalletRepository walletRepository;
   private final RoleRepository roleRepository;
 
-  public UserFacade(UserRepository userRepository, WalletRepository walletRepository, RoleRepository roleRepository) {
+  public UserFacadeImpl(UserRepository userRepository, WalletRepository walletRepository, RoleRepository roleRepository) {
     this.userRepository = userRepository;
     this.walletRepository = walletRepository;
     this.roleRepository = roleRepository;

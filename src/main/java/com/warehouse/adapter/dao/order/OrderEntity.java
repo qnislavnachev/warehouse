@@ -15,7 +15,7 @@ class OrderEntity {
   private Double price;
   private boolean isPaid;
 
-  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<OrderItemEntity> orderItems;
 
   public OrderEntity() {

@@ -6,7 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class JsonExporter extends AbstractExporter {
+public class JsonExporter implements Exporter {
   private final Marshaller marshaller;
 
   public JsonExporter() {

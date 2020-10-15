@@ -3,7 +3,7 @@ package com.warehouse.adapter.http;
 import com.warehouse.adapter.dao.role.RoleRepository;
 import com.warehouse.adapter.dao.user.UserRepository;
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
-import com.warehouse.adapter.facades.OrderFacade;
+import com.warehouse.facades.OrderFacade;
 import com.warehouse.adapter.security.AuthenticatedUser;
 import com.warehouse.adapter.security.Authority;
 import com.warehouse.adapter.security.WebTokenGenerator;

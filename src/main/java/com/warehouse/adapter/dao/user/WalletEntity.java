@@ -9,7 +9,7 @@ class WalletEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   private UserEntity owner;
   private Double balance;
 

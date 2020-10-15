@@ -1,6 +1,6 @@
 package com.warehouse.adapter.services.security;
 
-import com.warehouse.adapter.facades.UserFacade;
+import com.warehouse.facades.UserFacade;
 import com.warehouse.adapter.security.AuthenticatedUser;
 import com.warehouse.adapter.security.Authority;
 import com.warehouse.core.User;

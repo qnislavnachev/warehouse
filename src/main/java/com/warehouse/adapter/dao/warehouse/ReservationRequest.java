@@ -18,7 +18,7 @@ public class ReservationRequest {
     return productQuantities.keySet();
   }
 
-  public Double getQuantity(Long productId) {
+  public Double getQuantityOf(Long productId) {
     return productQuantities.getOrDefault(productId, 0.0);
   }
 

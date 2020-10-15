@@ -1,4 +1,4 @@
-package com.warehouse.adapter.facades;
+package com.warehouse.facades;
 
 import com.warehouse.adapter.dao.warehouse.WarehouseRepository;
 import com.warehouse.core.Order;
@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class WarehouseStorageFacade {
-
+public class WarehouseStorageFacadeImpl implements WarehouseStorageFacade {
   private final WarehouseRepository warehouseRepository;
 
-  public WarehouseStorageFacade(WarehouseRepository warehouseRepository) {
+  public WarehouseStorageFacadeImpl(WarehouseRepository warehouseRepository) {
     this.warehouseRepository = warehouseRepository;
   }
 

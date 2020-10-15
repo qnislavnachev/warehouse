@@ -1,6 +1,6 @@
 package com.warehouse.adapter.services;
 
-import com.warehouse.adapter.facades.RoleFacade;
+import com.warehouse.facades.RoleFacade;
 import com.warehouse.core.Role;
 import org.springframework.stereotype.Service;
 

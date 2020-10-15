@@ -81,7 +81,7 @@ class PersistentWarehouseRepository implements WarehouseRepository {
     List<Product> reservedProducts = new ArrayList<>();
 
     for (ProductEntity entity : productEntities) {
-      Double quantity = reservationRequest.getQuantity(entity.getId());
+      Double quantity = reservationRequest.getQuantityOf(entity.getId());
       boolean isReservationSuccessful = entity.reserve(quantity);
 
       if (!isReservationSuccessful) {

@@ -18,10 +18,10 @@ public class UserEntity {
   private String email;
   private String password;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<RoleEntity> roles;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private WalletEntity wallet;
 
   public UserEntity() {
